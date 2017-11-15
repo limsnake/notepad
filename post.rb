@@ -1,34 +1,44 @@
 class Post
+  # Метод post_types класса Post, возвращает всех известных ему детей класса
+  # Post в виде массива классов.
+  #
+  # Класс, объявленный с self. перед название — это не
+  # метод экземпляра класса, а метод самого класса (их ещё часто называют
+  # статические методы).
+  def self.post_types
+    [Memo, Link, Task] # Возвращает массив всех дочерних классов
+  end
+
+  def self.create(type_index)
+    post_types[type_index].new
+  end
+
   def initialize
     @created_at = Time.now
-    @text = nil
+    @text = []
   end
 
   def read_from_console
-    # todo
+    # Этот метод должен быть реализован у каждого ребенка
   end
 
-  # Метод должен возвращать содержимое
-  # объекта в виде массива строк
   def to_strings
-    # todo
+    # Этот метод должен быть реализован у каждого ребенк
   end
 
   def save
-    file = File.new(file_path, "w:UTF-8")
+    file = File.new(file_path, 'w:UTF-8') # открываем файл на запись
 
-    for item in to_strings do
-      file.puts(item)
-    end
+    to_strings.each { |string| file.puts(string) }
 
     file.close
   end
 
-  # Путь к файлу, куда записывать содержимое объекта
   def file_path
     current_path = File.dirname(__FILE__)
-    file_name = @created_at.strftime('#{self.class.name}_%Y-%m-%d_%H-%M-%S.txt')
-    return current_path + "/" + file_name
 
+    file_time = @created_at.strftime('%Y-%m-%d_%H-%M-%S')
+
+    "#{current_path}/#{self.class.name}_#{file_time}.txt"
   end
 end
